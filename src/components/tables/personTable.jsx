@@ -175,7 +175,7 @@ export const PersonTable = () => {
             enqueueSnackbar('La respuesta se ha actualizado con Exito 🥳🤩', {
                 autoHideDuration: 3000,
                 preventDuplicates: true,
-                variant: 'success'
+                variant: 'success',
             })
         } else {
             // si no hay ningun registro en la base de datos crear
@@ -189,9 +189,10 @@ export const PersonTable = () => {
                 body: JSON.stringify(recordData)
             })
             enqueueSnackbar('La respuesta se envio con Exito 🥳🤩', {
-                autoHideDuration: 3000,
+                autoHideDuration: 2000,
                 preventDuplicates: true,
-                variant: 'success'
+                variant: 'success',
+                onClose: () => window.location.reload()
             })
         }
     }
