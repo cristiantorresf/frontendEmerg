@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { CssBaseline, CssVarsProvider } from "@mui/joy";
-
-import App from './App';
 import { StrictMode } from "react";
 import reportWebVitals from './reportWebVitals';
 import { theme } from './core/theme';

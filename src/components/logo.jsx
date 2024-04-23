@@ -26,7 +26,7 @@ export function Logo(props) {
                 <BrightnessAutoRounded/>
             </IconButton>
             <Typography sx={{fontSize: "1.25rem"}} level="h4" component="div">
-                {process.env.REACT_APP_COMPANY_NAME}
+                {import.meta.env.VITE_APP_COMPANY_NAME}
             </Typography>
         </Sheet>
     );
