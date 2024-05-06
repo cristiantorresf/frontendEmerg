@@ -91,7 +91,6 @@ export const useCheckServerHealthCheck = (forceRedirectAuth = false) => {
 
 
 export const checkServerHealthCheck = (cb, countRender) => {
-    console.log("🚀>>", {countRender})
     fetch('http://localhost:4400/api/healthcheck').then((response) => {
         console.log("🚀 response >>", response)
         if (countRender.current === 0) {

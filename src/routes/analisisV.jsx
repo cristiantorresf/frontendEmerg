@@ -28,9 +28,14 @@ export const Component = function AnalisisR() {
                 },
             }),
         }}>
-            {/*{serverOk && <SuperGenericTable tableType={TABLETYPE.PERSON} />}*/}
+            <p>tabla Personas</p>
+            {serverOk && <SuperGenericTable tableType={TABLETYPE.PERSON} />}
+            <hr/>
             <p>Tabla Recursos</p>
+            <hr/>
             {serverOk && <SuperGenericTable tableType={TABLETYPE.RESOURCES} />}
+            <p>Tabla sistemas y procesos</p>
+            {serverOk && <SuperGenericTable tableType={TABLETYPE.SYSPROS} />}
         </Container>
 
     );

@@ -1,7 +1,7 @@
 import create from "zustand";
 import {devtools} from "zustand/middleware";
 import {getLoggedUser} from "../../hooks/auth/auth";
-import {obtenerRespuestasState} from "../../hooks/tables/fetchQuestions";
+import {obtenerRespuestasState, TABLETYPE} from "../../hooks/tables/fetchQuestions";
 
 const calcBtnDisabled = (selectedAnswers) => {
     const questions = selectedAnswers?.questions
@@ -12,16 +12,24 @@ const calcBtnDisabled = (selectedAnswers) => {
     return !(len >= 3)
 }
 
-export const calcZustandButtonDisabled = (state) => {
-    const selectedAnswers = state.selectedAnswers
+export const calculateButtonDisabled = (selectedAnswers) => {
     return calcBtnDisabled(selectedAnswers);
 }
 
 async function calculatePreviousAnswer(tableType) {
     const userId = getLoggedUser()?.id;
+    if (!userId){
+        alert('Tiene que estas logueado')
+        return []
+    }
     const response = await obtenerRespuestasState(userId, tableType )
     console.log("🚀>>", {response})
     return response;
+}
+
+export async function populateAnswersState(tableType) {
+    const selectedAnswers = await calculatePreviousAnswer(tableType)
+    return selectedAnswers;
 }
 
 export const useStore = create(devtools((set) => ({

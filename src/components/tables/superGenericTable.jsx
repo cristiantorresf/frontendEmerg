@@ -1,46 +1,69 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Table from '@mui/joy/Table';
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import Input from '@mui/joy/Input';
 import Textarea from '@mui/joy/Textarea';
 import Button from '@mui/joy/Button';
-import {getLoggedUser} from "../../hooks/auth/auth";
-import {sendNotification, VARIANTS} from "../../hooks/tables/notifications";
 import {TABLETYPE, usePublishAnswersFromState} from "../../hooks/tables/fetchQuestions";
-import {calcZustandButtonDisabled, useStore} from "./store";
+import {calculateButtonDisabled, populateAnswersState} from "./store";
 import {Mosaic} from "react-loading-indicators";
 import {Box} from "@mui/joy";
 import Summary from "./Summary";
 
-function calcPromedio(state) {
-    const questions = state?.selectedAnswers?.questions;
+function calcPromedio(selectedAnswers) {
+    const questions = selectedAnswers?.questions;
     if (!questions) return 0
-    const promedioTotal = questions.reduce((ac,cv) => ac+cv.score,0) / state.selectedAnswers.questions.length;
+    const promedioTotal = questions.reduce((ac, cv) => ac + cv.score, 0) / selectedAnswers.questions.length;
     return promedioTotal
 }
 
-function calcTotal(state) {
-    const questions = state?.selectedAnswers?.questions;
+function calcTotal(selectedAnswers) {
+    const questions = selectedAnswers?.questions;
     if (!questions) return 0
-    const calificacionTotal = questions.reduce((ac,cv) => ac+cv.score,0)
+    const calificacionTotal = questions.reduce((ac, cv) => ac + cv.score, 0)
     return calificacionTotal
 }
 
-export const SuperGenericTable = ({tableType= TABLETYPE.PERSON}) => {
-    const selectedAnswers = useStore(s => s.selectedAnswers);
-    const setSelectedAnswers = useStore(s => s.updateSelectedAnswers)
-    const populateAnswersState = useStore(s => s.populateAnswersState)
-    const promedio = useStore(calcPromedio);
-    const total = useStore(calcTotal)
-    const isButtonDisable = useStore(calcZustandButtonDisabled)
+function mapQuestionSections(selectedAnswers) {
+    // como hay secciones de preguntas como servicios y sistemas alternos
+    // la idea es separar el arreglo en dos
+    // cada uno con su seccion y preguntas para renderizarlo mas facil
+    // {servicios:[], }
+    if (!selectedAnswers?.questions) return {}
+    const res = selectedAnswers.questions.reduce((acc, question) => {
+        const { questionType } = question;
+        acc[questionType] = acc[questionType] || [];
+        acc[questionType].push(question);
+        return acc;
+    }, {});
+    const final =  Object.entries(res)
+    console.log("🚀final >> ", final)
+    return final
+}
+
+export const SuperGenericTable = ({tableType = TABLETYPE.PERSON}) => {
+    const [selectedAnswers, setSelectedAnswers] = useState([]);
+    const promedio = calcPromedio(selectedAnswers);
+    const total = calcTotal(selectedAnswers);
+    const isButtonDisable = calculateButtonDisabled(selectedAnswers);
     const [hasError, setHasError] = useState(false);
     const {publishState, publish} = usePublishAnswersFromState()
+    const countRender = useRef(0)
+    const questionSections = mapQuestionSections(selectedAnswers);
+    console.log("🚀questionSections >> ", questionSections)
     // ciclos de vida del componente
     useEffect(() => {
-        console.log("🚀>>", {selectedAnswers})
-        populateAnswersState(tableType)
-    }, [populateAnswersState]);
+        // This ensures the function inside only runs once after the initial render
+        if (countRender.current === 0) {
+            (async () => {
+                const answersStateFromBackend = await populateAnswersState(tableType);
+                setSelectedAnswers(answersStateFromBackend);
+                console.log("🤬 render >>", countRender.current); // Should log 0 initially
+            })();
+        }
+        countRender.current++;
+    }, []); // Empty dependency array ensures this runs only on the first render
 
 
     if (hasError || !selectedAnswers) return <h4>🙀Error 🤯 No hay comunicación con el servidor.</h4>
@@ -76,8 +99,20 @@ export const SuperGenericTable = ({tableType= TABLETYPE.PERSON}) => {
     }
     return (
         <>
-            {publishState?.loading && (<Box sx={{position:'fixed', bottom:"0", top:"0", left:'0', right:'0', display:'flex',justifyContent:'center',alignItems:'center', background:'#000000d6', zIndex:'99999'}}>
-                <Mosaic color="#32cd32" size="medium" text="" textColor="" />
+            <h1>tipo de tabla {selectedAnswers?.questionId}</h1>
+            {publishState?.loading && (<Box sx={{
+                position: 'fixed',
+                bottom: "0",
+                top: "0",
+                left: '0',
+                right: '0',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                background: '#000000d6',
+                zIndex: '99999'
+            }}>
+                <Mosaic color="#32cd32" size="medium" text="" textColor=""/>
             </Box>)}
 
             <Table aria-label="tabla personas" sx={{'& tr > *:not(:first-child)': {textAlign: 'right'}}}
@@ -94,29 +129,35 @@ export const SuperGenericTable = ({tableType= TABLETYPE.PERSON}) => {
                 </tr>
                 </thead>
                 <tbody>
-                {selectedAnswers && selectedAnswers?.questions && selectedAnswers?.questions?.map((question, index) => (
-                    <tr key={question._id} style={{height: '6rem'}}>
-                        <th style={{whiteSpace: 'normal'}}>{question.question}</th>
-                        <th><Select value={selectedAnswers.questions[index]?.answer || 'SI'}
-                                    onChange={(_dom, value) => handleChange(question, value)}>
-                            <Option value="SI">SI</Option>
-                            <Option value="NO">NO</Option>
-                            <Option value="PARCIAL">PARCIAL</Option>
-                        </Select></th>
-                        <th><Input placeholder="Calificacion" variant="outlined"
-                                   disabled={true}
-                                   value={selectedAnswers.questions[index]?.score || '0'}
-                                   onChange={(e) => handleChange(question, e.target.value, 'score')}/></th>
-                        <th><Textarea value={selectedAnswers.questions[index]?.observation || ' '} minRows={2}
-                                      onChange={(e) => handleChange(question, e.target.value, 'observation')}/>
-                        </th>
-                    </tr>
-
+                {questionSections?.length && questionSections.map(([sectionName, questions]) => (
+                    <React.Fragment key={sectionName}>
+                        <tr>
+                            <th colSpan="4" style={{ background: 'blue', color: 'white' }}>{sectionName}</th>
+                        </tr>
+                        {questions.map(question => (
+                            <tr key={question._id}>
+                                <td>{question.question}</td>
+                                <td>
+                                    <Select value={question.answer} onChange={(_dom, value) => handleChange(question, value, 'answer')}>
+                                        <Option value="SI">SI</Option>
+                                        <Option value="NO">NO</Option>
+                                        <Option value="PARCIAL">PARCIAL</Option>
+                                    </Select>
+                                </td>
+                                <td>
+                                    <Input value={question.score.toString()} disabled />
+                                </td>
+                                <td>
+                                    <Textarea minRows={2} value={question.observation || ""} onChange={(e) => handleChange(question, e.target.value, 'observation')} />
+                                </td>
+                            </tr>
+                        ))}
+                    </React.Fragment>
                 ))}
                 </tbody>
             </Table>
             <Button onClick={sendResponse} disabled={isButtonDisable}>Enviar Respuesta</Button>
-            <Summary promedio={promedio} total={total} />
+            {selectedAnswers?.questions?.length && <Summary data={selectedAnswers.questions} tableType={tableType}/>}
 
         </>
     );
