@@ -1,9 +1,9 @@
 import React from 'react';
-import { List, ListItem, ListItemButton, ListItemContent, ListItemDecorator } from "@mui/joy";
-import { TimelineRounded } from "@mui/icons-material";
+import {List, ListItem, ListItemButton, ListItemContent, ListItemDecorator} from "@mui/joy";
+import {TimelineRounded} from "@mui/icons-material";
 import {TABLETYPE} from "../../hooks/tables/fetchQuestions";
 
-function Summary({ data, tableType }) {
+function Summary({data, tableType}) {
     const calculateMetrics = (data) => {
         // Example of additional metrics calculations
         const metrics = {
@@ -12,52 +12,46 @@ function Summary({ data, tableType }) {
             highestScore: Math.max(...data.map(item => item.score)),
             lowestScore: Math.min(...data.map(item => item.score)),
         };
-
-        if (tableType === TABLETYPE.PERSON) {
-            metrics.percentageAboveThreshold = (data.filter(q => q.score >= 1).length / data.length) * 100;
-        }
-
+        metrics.percentageAboveThreshold = (data.filter(q => q.score >= 1).length / data.length) * 100;
         return metrics;
     };
 
-    const { promedio, total, highestScore, lowestScore, percentageAboveThreshold } = calculateMetrics(data);
+    const {promedio, total, highestScore, lowestScore, percentageAboveThreshold} = calculateMetrics(data);
 
     return (
         <List>
             <ListItem disablePadding>
                 <ListItemButton>
-                    <ListItemDecorator><TimelineRounded /></ListItemDecorator>
+                    <ListItemDecorator><TimelineRounded/></ListItemDecorator>
                     <ListItemContent>Promedio: {promedio.toFixed(2)}</ListItemContent>
                 </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
                 <ListItemButton>
-                    <ListItemDecorator><TimelineRounded /></ListItemDecorator>
+                    <ListItemDecorator><TimelineRounded/></ListItemDecorator>
                     <ListItemContent>Total: {total}</ListItemContent>
                 </ListItemButton>
             </ListItem>
-            {tableType === TABLETYPE.PERSON && (
-                <>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemDecorator><TimelineRounded /></ListItemDecorator>
-                            <ListItemContent>Highest Score: {highestScore}</ListItemContent>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemDecorator><TimelineRounded /></ListItemDecorator>
-                            <ListItemContent>Lowest Score: {lowestScore}</ListItemContent>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemDecorator><TimelineRounded /></ListItemDecorator>
-                            <ListItemContent>% Above Threshold: {percentageAboveThreshold.toFixed(2)}%</ListItemContent>
-                        </ListItemButton>
-                    </ListItem>
-                </>
-            )}
+
+            <ListItem disablePadding>
+                <ListItemButton>
+                    <ListItemDecorator><TimelineRounded/></ListItemDecorator>
+                    <ListItemContent>Highest Score: {highestScore}</ListItemContent>
+                </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+                <ListItemButton>
+                    <ListItemDecorator><TimelineRounded/></ListItemDecorator>
+                    <ListItemContent>Lowest Score: {lowestScore}</ListItemContent>
+                </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+                <ListItemButton>
+                    <ListItemDecorator><TimelineRounded/></ListItemDecorator>
+                    <ListItemContent>% Por encima del Umbral: {percentageAboveThreshold.toFixed(2)}%</ListItemContent>
+                </ListItemButton>
+            </ListItem>
+
         </List>
     );
 }
