@@ -5,7 +5,7 @@ import Option from '@mui/joy/Option';
 import Input from '@mui/joy/Input';
 import Textarea from '@mui/joy/Textarea';
 import Button from '@mui/joy/Button';
-import {TABLETYPE, usePublishAnswersFromState} from "../../hooks/tables/fetchQuestions";
+import {TABLETYPE, useCheckServerHealthCheck, usePublishAnswersFromState} from "../../hooks/tables/fetchQuestions";
 import {calculateButtonDisabled, populateAnswersState} from "./store";
 import {Mosaic} from "react-loading-indicators";
 import {Box} from "@mui/joy";
@@ -44,6 +44,7 @@ function mapQuestionSections(selectedAnswers) {
 
 export const SuperGenericTable = ({tableType = TABLETYPE.PERSON}) => {
     const [selectedAnswers, setSelectedAnswers] = useState([]);
+    const {serverOk} = useCheckServerHealthCheck()
     const promedio = calcPromedio(selectedAnswers);
     const total = calcTotal(selectedAnswers);
     const isButtonDisable = calculateButtonDisabled(selectedAnswers);
@@ -97,9 +98,8 @@ export const SuperGenericTable = ({tableType = TABLETYPE.PERSON}) => {
     const sendResponse = async () => {
         publish(selectedAnswers);
     }
-    return (
+    return serverOk ? (
         <>
-            <h1>tipo de tabla {selectedAnswers?.questionId}</h1>
             {publishState?.loading && (<Box sx={{
                 position: 'fixed',
                 bottom: "0",
@@ -160,5 +160,5 @@ export const SuperGenericTable = ({tableType = TABLETYPE.PERSON}) => {
             {selectedAnswers?.questions?.length && <Summary data={selectedAnswers.questions} tableType={tableType}/>}
 
         </>
-    );
+    ) : null;
 }

@@ -5,6 +5,8 @@
 //import {faStickyNote} from "@fortawesome/free-solid-svg-icons";
 //import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Card, CardContent, Container, List, Typography } from "@mui/joy";
+import {SuperGenericTable} from "../components/tables/superGenericTable";
+import {TABLETYPE} from "../hooks/tables/fetchQuestions";
 
 
 
@@ -93,7 +95,7 @@ export const Component = function AnalisisR() {
   return (
     <Container sx={{ py: 2 }}>
       <Typography sx={{ mb: 2 }} level="h2">
-        CONSOLIDADO DE ANÁLISIS DE RIESGO 
+        CONSOLIDADO DE ANÁLISIS DE RIESGO
       </Typography>
       <Typography level="h4">
         Análisis de Vulnerabilidad de Recursos
@@ -113,41 +115,41 @@ export const Component = function AnalisisR() {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: { sm: "1fr 1fr", md: "1fr 1fr" 
+          gridTemplateColumns: { sm: "1fr 1fr", md: "1fr 1fr"
          },
         }}
-      > 
+      >
         <Card sx={{ background: "", gridRow: "1 / 2" }}>
           <Title
             text="Nombre de la sede"
             sx={{ fontWeight: "bold" }}
           />
-        </Card>      
+        </Card>
         <Card sx={{ background: "#a2c4c9", gridRow: "1 / 2" }}>
           <Title
             text="LOGYK FG SAS"
             sx={{ fontWeight: "bold" }}
           />
-        </Card>   
+        </Card>
       </Box>
       <Box
         sx={{
           display: "grid",
           gridTemplateColumns: { sm: "1fr 9fr", md: "1fr 9fr"},
         }}
-      > 
+      >
         <Card sx={{ background: "", gridRow: "1 / 2" }}>
           <Title
             text="Fecha"
             sx={{ fontWeight: "bold" }}
           />
-        </Card>      
+        </Card>
         <Card sx={{ background: "", gridRow: "1 / 2" }}>
           <Title
             text=" "
             sx={{ fontWeight: "bold" }}
           />
-        </Card>   
+        </Card>
       </Box>
 
       <Box
@@ -186,7 +188,7 @@ export const Component = function AnalisisR() {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: { sm: "1fr", md: "1fr" 
+          gridTemplateColumns: { sm: "1fr", md: "1fr"
          },
         }}
       >
@@ -194,7 +196,7 @@ export const Component = function AnalisisR() {
           <CardContent sx={{ minHeight: 0 ,background: "#a2c4c9"}}>
             <Typography level="h4" sx={{ textAlign: "left" }}>
               1. Suministros {" "}
-            </Typography>   
+            </Typography>
           </CardContent>
         </Card>
       </Box>
@@ -211,7 +213,7 @@ export const Component = function AnalisisR() {
       >
          <Card sx={{ background: "#f0fde6", gridRow: "1 / 2" }}>
           <Title text="¿Se cuenta con los equipos de señalización y delimitación ¨señales de pare¨, cinta de acordonamiento o balizamiento, conos reflectivos, entre otros)?" />
-        </Card>       
+        </Card>
         <Card sx={{ background: "#f0fde6", gridRow: "2 / 3" }}>
           <Title text="¿Se cuenta con extintores portátiles seleccionados y distribuidos según y/o acordes a la norma NFPA 10 o las necesidades de la institución?" />
         </Card>
@@ -220,11 +222,11 @@ export const Component = function AnalisisR() {
         </Card>
         <Card sx={{ background: "#f0fde6",gridRow: "4 / 5" }}>
           <Title text="¿Se cuentan con botiquines ¨portátiles o fijos¨ dotados y en un número suficiente, acorde a las necesidades de las diferentes dependencias o instituciones?"/>
-        </Card>        
+        </Card>
         <Card sx={{ background: "#f0fde6",gridRow: "5 / 5" }}>
           <Title text="¿E?"/>
-        </Card> 
-        
+        </Card>
+
         <Card sx={{ background: " #fde6f0 ", gridRow: "2 / 1" }}>
           <Title text="SÍ" />
         </Card>
@@ -233,7 +235,7 @@ export const Component = function AnalisisR() {
         </Card>
         <Card sx={{ background: " #fde6f0 ",gridRow: "3 / 3" }}>
           <Title text="SÍ"/>
-        </Card> 
+        </Card>
         <Card sx={{ background: " #fde6f0 ", gridRow: "4/ 4" }}>
           <Title text="SÍ" />
         </Card>
@@ -243,7 +245,7 @@ export const Component = function AnalisisR() {
 
         <Card sx={{ background: " pink",gridRow: "2 / 1" }}>
           <Title text="1"/>
-        </Card> 
+        </Card>
         <Card sx={{ background: " pink ", gridRow: "3 / 2" }}>
           <Title text="1" />
         </Card>
@@ -252,7 +254,7 @@ export const Component = function AnalisisR() {
         </Card>
         <Card sx={{ background: " pink",gridRow: "4 / 4" }}>
           <Title text="1"/>
-        </Card> 
+        </Card>
         <Card sx={{ background: "pink ", gridRow: "5 / 5" }}>
           <Title text="1" />
         </Card>
@@ -263,7 +265,7 @@ export const Component = function AnalisisR() {
         </Card>
         <Card sx={{ background: " #e6fde8",gridRow: "2 / 2" }}>
           <Title text=" "/>
-        </Card> 
+        </Card>
         <Card sx={{ background: " #e6fde8", gridRow: "4 / 3" }}>
           <Title text=" " />
         </Card>
@@ -272,12 +274,13 @@ export const Component = function AnalisisR() {
         </Card>
         <Card sx={{ background: "#e6fde8",gridRow: "5 / 5" }}>
           <Title text=" "/>
-        </Card> 
+        </Card>
 
       </Box>
 
       <hr />
       <br />
+        <SuperGenericTable tableType={TABLETYPE.RESOURCES} />
 
     </Container>
   );

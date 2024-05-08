@@ -13,7 +13,6 @@ export const Component = function AnalisisR() {
 
     const theme = useTheme();
 
-    const {serverOk} = useCheckServerHealthCheck()
 
     return (
         <Container sx={{
@@ -28,14 +27,7 @@ export const Component = function AnalisisR() {
                 },
             }),
         }}>
-            <p>tabla Personas</p>
-            {serverOk && <SuperGenericTable tableType={TABLETYPE.PERSON} />}
-            <hr/>
-            <p>Tabla Recursos</p>
-            <hr/>
-            {serverOk && <SuperGenericTable tableType={TABLETYPE.RESOURCES} />}
-            <p>Tabla sistemas y procesos</p>
-            {serverOk && <SuperGenericTable tableType={TABLETYPE.SYSPROS} />}
+         <SuperGenericTable tableType={TABLETYPE.PERSON} />
         </Container>
 
     );

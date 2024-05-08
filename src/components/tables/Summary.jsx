@@ -32,19 +32,6 @@ function Summary({data, tableType}) {
                     <ListItemContent>Total: {total}</ListItemContent>
                 </ListItemButton>
             </ListItem>
-
-            <ListItem disablePadding>
-                <ListItemButton>
-                    <ListItemDecorator><TimelineRounded/></ListItemDecorator>
-                    <ListItemContent>Highest Score: {highestScore}</ListItemContent>
-                </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-                <ListItemButton>
-                    <ListItemDecorator><TimelineRounded/></ListItemDecorator>
-                    <ListItemContent>Lowest Score: {lowestScore}</ListItemContent>
-                </ListItemButton>
-            </ListItem>
             <ListItem disablePadding>
                 <ListItemButton>
                     <ListItemDecorator><TimelineRounded/></ListItemDecorator>
